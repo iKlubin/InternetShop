@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InternetShop</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/InternetShop.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-pagination.css" asp-append-version="true" />
+
+    <style>
+        /* Custom CSS for modern navbar design */
+        .navbar {
+            background-color: #343a40; /* Dark background color */
+        }
+
+        .navbar-brand, .nav-link, .form-control, .btn {
+            color: #ffffff !important; /* White text color */
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .nav-link:hover {
+            color: #ffc107 !important; /* Yellow color on hover */
+        }
+
+        .form-control {
+            background-color: #495057; /* Dark input background */
+            border: none;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            background-color: #6c757d; /* Slightly lighter on focus */
+        }
+
+        .btn-outline-success {
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #ffc107;
+            color: #343a40;
+        }
+
+        .footer {
+            background-color: #343a40; /* Dark background */
+            color: #ffffff; /* White text */
+            padding: 30px 0; /* Padding around content */
+        }
+
+        .footer h5 {
+            color: #ffc107; /* Yellow heading */
+            font-weight: bold;
+        }
+
+        .footer ul {
+            padding-left: 0; /* Remove padding for link list */
+            list-style: none; /* Remove list markers */
+        }
+
+        .footer ul li a {
+            color: #ffffff; /* White text for links */
+            text-decoration: none; /* Remove underline */
+        }
+
+        .footer ul li a:hover {
+            color: #ffc107; /* Yellow color on hover */
+        }
+    </style>
+</head>
+<body style="background: #f5f7fa">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid" style="max-width: 1200px;">
+                <a class="navbar-brand" asp-area="" asp-controller="Products" asp-action="Index">InternetShop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("Create")" class="btn btn-primary me-2">Add New Product</a>
+                    <form class="d-flex" asp-action="Index" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString" value="@ViewData["SearchString"]">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-link nav-link" style="display:inline;cursor:pointer;">Logout</button>
+                        </form>
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Profile">Profile</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h5>InternetShop</h5>
+                    <p>Your one-stop shop for all your needs.</p>
+                </div>
+                <div class="col-sm-4">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
+                        <li><a asp-area="" asp-controller="Cart" asp-action="Index">Cart</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About Us</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4">
+                    <h5>Contact Us</h5>
+                    <p>
+                        1234 Market St, Suite 100<br />
+                        San Francisco, CA 94103<br />
+                        Email: support@internetshop.com<br />
+                        Phone: (123) 456-7890
+                    </p>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                &copy; 2024 - InternetShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

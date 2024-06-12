@@ -1,0 +1,37 @@
+﻿@model IEnumerable<InternetShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Search Results</h1>
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4 mb-4" style="height: 400px; width: 400px">
+            <div class="card h-100">
+                <div class="card-img-container" style="height: 300px; overflow: hidden;">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 100%; object-fit: cover;">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Description</p>
+                    <p class="card-text"><strong>Price: </strong>@product.Price</p>
+                    <p class="card-text"><strong>Category: </strong>@product.Category</p>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-primary">Details</a>
+                    <a href="@Url.Action("Edit", new { id = product.Id })" class="btn btn-warning">Edit</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,16 @@
+﻿@model InternetShop.Models.User
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container my-5">
+    <h1>User Profile</h1>
+    <form asp-action="Profile" method="post">
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" readonly/>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+</div>

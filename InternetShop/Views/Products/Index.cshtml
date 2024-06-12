@@ -1,0 +1,118 @@
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList
+@model IPagedList<InternetShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Товары";
+}
+
+<h1 class="text-center my-4">Товары</h1>
+
+<div class="container" style="margin-bottom: 500px">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card product-card h-100 shadow-sm">
+                    <div class="card-img-container">
+                        <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name">
+                    </div>
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text price">₽@product.Price.ToString("F2")</p>
+                        <div class="d-flex justify-content-center my-3">
+                            <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-primary add-to-cart-btn me-2">Подробнее</a>
+                            <form asp-action="AddToCart" asp-controller="Cart" method="post">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <button class="btn btn-primary add-to-cart-btn ms-2" type="submit" class="btn btn-success">В корзину</button>
+                            </form>
+                            @* <a href="@Url.Action("Edit", new { id = product.Id })" class="btn btn-primary add-to-cart-btn ms-2">Изменить</a> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .product-card {
+                    border-radius: 15px;
+                    transition: transform 0.3s, box-shadow 0.3s;
+                }
+
+                .product-card:hover {
+                    transform: translateY(-10px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                }
+
+                .card-img-container {
+                    padding: 15px;
+                    height: 450px;
+                    border-top-left-radius: 15px;
+                    border-top-right-radius: 15px;
+                }
+
+                .card-img-top {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s;
+                }
+
+                .product-card:hover .card-img-top {
+                    transform: scale(1.1);
+                }
+
+                .card-body {
+                    padding: 20px;
+                }
+
+                .card-title {
+                    font-weight: bold;
+                    font-size: 1.25rem;
+                    margin-bottom: 10px;
+                }
+
+                .card-text {
+                    font-size: 0.9rem;
+                    color: #6c757d;
+                    margin-bottom: 10px;
+                }
+
+                .price {
+                    font-weight: bold;
+                    font-size: 1.5rem;
+                    color: #343a40;
+                    margin-bottom: 20px;
+                }
+
+                .add-to-cart-btn {
+                    background-color: #343a40;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    color: #ffc107;
+                    transition: background-color 0.3s, color 0.3s;
+                }
+
+                .add-to-cart-btn:hover {
+                    background-color: #ffc107;
+                    color: #343a40;
+                }
+            </style>
+
+        }
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        @Html.PagedListPager(Model, pageNumber => Url.Action("Index", new { pageNumber }), new PagedListRenderOptions
+   {
+       UlElementClasses = new[] { "pagination" },
+       LiElementClasses = new[] { "page-item" },
+       PageClasses = new[] { "page-link" },
+       LinkToFirstPageFormat = "« First",
+       LinkToPreviousPageFormat = "‹ Previous",
+       LinkToNextPageFormat = "Next ›",
+       LinkToLastPageFormat = "Last »",
+       MaximumPageNumbersToDisplay = 5
+   })
+    </div>
+</div>

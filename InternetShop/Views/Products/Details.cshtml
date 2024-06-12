@@ -1,0 +1,82 @@
+﻿@model InternetShop.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Разделение строки Tags на отдельные теги
+    var tagsList = !string.IsNullOrEmpty(Model.Tags) ? Model.Tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries) : new string[0];
+}
+
+<div class="container my-5">
+    <div class="row" style="margin-bottom: 800px">
+        <!-- Left Side: Product Image -->
+        <div class="col-md-6 d-flex align-content-center">
+            <div class="product-image-container" style="max-width: 700px; width: 100%;">
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid" style="width: 100%; border-radius: 10px; object-fit: cover;">
+            </div>
+        </div>
+
+        <!-- Right Side: Product Details -->
+        <div class="col-md-6">
+            <div class="product-details">
+                <p class="product-vendor text-muted fw-bold">
+                    @if (tagsList.Length > 0)
+                    {
+                        @tagsList[0]
+                    }
+                    else
+                    {
+                        <p>Производитель</p>
+                    }
+                </p>
+                <h1 class="product-title" style="font-size: 2rem; font-weight: bold;">@Model.Name</h1>
+                <p class="product-description text-muted" style="font-size: 1rem;">@Model.Description</p>
+                <p class="product-price" style="font-size: 1.5rem; font-weight: bold;">₽@Model.Price.ToString("F2")</p>
+                <p class="product-description text-muted" style="font-size: 1rem;">Просмотры: @Model.ViewCount</p>
+
+                <div class="mb-4">
+                    <button class="btn btn-dark btn-lg btn-block" style="border-radius: 25px;">Add to Bag</button>
+                </div>
+
+                <div class="mb-4">
+                    <p class="mb-1" style="font-weight: bold;">Share:</p>
+                    <div>
+                        <a href="#" class="text-decoration-none mr-2"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-decoration-none mr-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+
+                <div class="card card-body m-3">
+                    <p><strong>Category:</strong> @Model.Category</p>
+                    <p><strong>Tags:</strong> @Model.Tags</p>
+                    <p><strong>Purchases Count:</strong> @Model.PurchaseCount</p>
+                    <p class="product-extended-description text-muted" style="font-size: 1rem;">@Model.ExtendedDescription</p> <!-- Extended Description -->
+                </div>
+
+                <div>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+                    <a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-warning">Edit</a>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete('@Model.Id')">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="deleteForm" asp-action="Delete" asp-controller="Products" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+</form>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous">
+    </script>
+    <script>
+        function confirmDelete(productId) {
+            if (confirm("Are you sure you want to delete this product?")) {
+                document.getElementById('deleteForm').submit();
+            }
+        }
+    </script>
+}

@@ -1,0 +1,101 @@
+﻿@model List<InternetShop.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .cart-item {
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px 0;
+    }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item img {
+            max-width: 100px;
+        }
+
+        .cart-item .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .cart-item .product-id {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .cart-item .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .cart-item .quantity input {
+            width: 60px;
+            text-align: center;
+        }
+</style>
+
+<div class="container my-5" >
+    <h2 class="mb-4">Shopping Cart</h2>
+    @if (Model.Count == 0)
+    {
+        <p>Your cart is empty.</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12">
+                @foreach (var item in Model)
+                {
+                    <div class="row cart-item mb-3">
+                        <div class="col-md-2">
+                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-fluid">
+                        </div>
+                        <div class="col-md-4 d-flex flex-column justify-content-center">
+                            <div class="product-name">@item.Product.Name</div>
+                            <div class="product-id">#@item.ProductId</div>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <div class="quantity d-flex justify-content-center align-items-center">
+                                <form asp-action="UpdateCartQuantity" asp-controller="Cart" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button type="submit" name="quantity" value="@((int)item.Quantity - 1)" class="btn btn-outline-secondary text-black font-weight-bold w-100">-</button>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button type="submit" name="quantity" value="@((int)item.Quantity + 1)" class="btn btn-outline-secondary text-black font-weight-bold w-100">+</button>
+                                        </div>
+                                        <input type="text" name="quantity" value="@item.Quantity" class="form-control text-center" style="max-width: 50px;" readonly />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <div class="price">₽@((item.Product.Price * item.Quantity).ToString("F2"))</div>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-center justify-content-end">
+                            <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-danger">&times;</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-primary add-to-cart-btn me-2">Добавить ещё</a>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
+                        <h3>Total: <span class="font-weight-bold">₽@(Model.Sum(item => item.Product.Price * item.Quantity))</span></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
