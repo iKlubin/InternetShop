@@ -2,11 +2,6 @@
 using Google.Cloud.Storage.V1;
 using InternetShop.Models;
 using Google.Apis.Auth.OAuth2;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Google.Cloud.Firestore.V1;
 
 namespace InternetShop.Services
 {

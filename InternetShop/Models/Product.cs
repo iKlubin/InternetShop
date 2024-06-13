@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using Google.Cloud.Firestore;
+﻿using Google.Cloud.Firestore;
+using System.Collections.Generic;
 
 namespace InternetShop.Models
 {
@@ -36,5 +35,11 @@ namespace InternetShop.Models
 
         [FirestoreProperty]
         public int ViewCount { get; set; }
+
+        [FirestoreProperty]
+        public int AverageRating { get; set; }
+
+        [FirestoreProperty]
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

@@ -8,8 +8,7 @@
     <h1>User Profile</h1>
     <form asp-action="Profile" method="post">
         <div class="form-group">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" readonly/>
+            <label>@User.Identity.Name</label>
         </div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>

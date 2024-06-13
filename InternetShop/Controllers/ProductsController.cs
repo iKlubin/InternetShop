@@ -2,9 +2,7 @@
 using InternetShop.Models;
 using InternetShop.Services;
 using X.PagedList;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Google.Api;
 
 namespace InternetShop.Controllers
 {
@@ -36,7 +34,15 @@ namespace InternetShop.Controllers
 
             var pagedProducts = products.ToPagedList(pageNumber, pageSize);
 
-            return View(pagedProducts);
+            var mostViewedProducts = products.OrderByDescending(p => p.ViewCount).Take(10).ToList();
+
+            var model = new ListProducts
+            {
+                PagedProducts = pagedProducts,
+                MostViewedProducts = mostViewedProducts
+            };
+
+            return View(model);
         }
 
         // GET: Products/Create
