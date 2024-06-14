@@ -79,5 +79,22 @@ namespace InternetShop.Services
             await productRef.DeleteAsync();
         }
 
+        public async Task<List<string>> GetCategoriesAsync()
+        {
+            var categoryNames = new List<string>();
+            var categoriesCollection = _firestoreDb.Collection("categories");
+            var snapshot = await categoriesCollection.GetSnapshotAsync();
+
+            foreach (var document in snapshot.Documents)
+            {
+                var category = document.ConvertTo<Category>();
+                if (!string.IsNullOrEmpty(category.Name))
+                {
+                    categoryNames.Add(category.Name);
+                }
+            }
+
+            return categoryNames;
+        }
     }
 }

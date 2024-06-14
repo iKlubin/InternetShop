@@ -19,21 +19,26 @@ namespace InternetShop.Services
 
         public async Task AddReviewAsync(Review review)
         {
-            review.Id = Guid.NewGuid().ToString();
-            review.Date = DateTime.Now;
-
-            CollectionReference collection = _firestoreDb.Collection("reviews");
+            var collection = _firestoreDb.Collection("reviews");
             await collection.AddAsync(review);
-
-            // Update the product's average rating and reviews
-            await UpdateProductRatingAsync(review.ProductId);
         }
 
         public async Task<List<Review>> GetReviewsByProductIdAsync(string productId)
         {
-            Query query = _firestoreDb.Collection("reviews").WhereEqualTo("ProductId", productId);
-            QuerySnapshot snapshot = await query.GetSnapshotAsync();
-            return snapshot.Documents.Select(d => d.ConvertTo<Review>()).ToList();
+            var reviews = new List<Review>();
+            var query = _firestoreDb.Collection("reviews").WhereEqualTo("ProductId", productId);
+            var snapshot = await query.GetSnapshotAsync();
+
+            if (snapshot != null)
+            {
+                foreach (var document in snapshot.Documents)
+                {
+                    var review = document.ConvertTo<Review>();
+                    reviews.Add(review);
+                }
+            }
+
+            return reviews;
         }
 
         public async Task<Review> GetReviewByIdAsync(string reviewId)

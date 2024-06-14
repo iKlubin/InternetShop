@@ -9,11 +9,12 @@ namespace InternetShop.Controllers
     public class ProductsController : Controller
     {
         private readonly ProductService _productService;
-        private readonly List<string> _categories = new List<string> { "Электроника", "Компьютеры", "Аксессуары", "Бытовая техника", "Кухонная техника", "Транспорт", "Спорт и отдых", "Игры и игрушки" };
+        private readonly ReviewService _reviewService;
 
-        public ProductsController(ProductService productService)
+        public ProductsController(ProductService productService, ReviewService reviewService)
         {
             _productService = productService;
+            _reviewService = reviewService;
         }
 
         // GET: Products
@@ -47,9 +48,9 @@ namespace InternetShop.Controllers
 
         // GET: Products/Create
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = _categories;
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
             return View();
         }
 
@@ -74,7 +75,7 @@ namespace InternetShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Categories = _categories;
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
             return View(product);
         }
 
@@ -94,7 +95,7 @@ namespace InternetShop.Controllers
                 return NotFound();
             }
 
-            ViewBag.Categories = _categories;
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
             return View(product);
         }
 
@@ -139,7 +140,7 @@ namespace InternetShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Categories = _categories;
+            ViewBag.Categories = await _productService.GetCategoriesAsync();
             return View(product);
         }
 
@@ -151,7 +152,7 @@ namespace InternetShop.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
@@ -162,11 +163,40 @@ namespace InternetShop.Controllers
                 return NotFound();
             }
 
+            // Обновление счетчика просмотров
             product.ViewCount += 1;
-
             await _productService.UpdateProductAsync(product);
 
+            var reviews = await _reviewService.GetReviewsByProductIdAsync(id);
+            if (reviews == null)
+            {
+                reviews = new List<Review>();
+            }
+            ViewBag.Reviews = reviews;
+
             return View(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReview(string productId, int rating, string comment)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var review = new Review
+            {
+                ProductId = productId,
+                UserEmail = User.Identity.Name,
+                Rating = rating,
+                Comment = comment,
+                Date = DateTime.UtcNow
+            };
+
+            await _reviewService.AddReviewAsync(review);
+            return RedirectToAction("Details", new { id = productId });
         }
 
         // POST: Products/Delete
@@ -187,6 +217,28 @@ namespace InternetShop.Controllers
 
             await _productService.DeleteProductAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Products by Category
+        [HttpGet]
+        public async Task<IActionResult> ByCategory(string category, int pageNumber = 1, int pageSize = 15)
+        {
+            var products = await _productService.GetProductsAsync();
+            var filteredProducts = products.Where(p => p.Category != null && p.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            var pagedProducts = filteredProducts.ToPagedList(pageNumber, pageSize);
+
+            var mostViewedProducts = products.OrderByDescending(p => p.ViewCount).Take(10).ToList();
+
+            var model = new ListProducts
+            {
+                PagedProducts = pagedProducts,
+                MostViewedProducts = mostViewedProducts
+            };
+
+            ViewData["Category"] = category;
+
+            return View("Index", model);
         }
     }
 }

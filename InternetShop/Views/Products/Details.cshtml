@@ -69,48 +69,54 @@
     <input type="hidden" name="id" value="@Model.Id" />
 </form>
 
-<h3>Reviews</h3>
-@if (Model.Reviews != null && Model.Reviews.Any())
-{
-    foreach (var review in Model.Reviews)
-    {
-        <div>
-            <p><strong>@review.UserEmail</strong> (@review.Date.ToShortDateString())</p>
-            <p>Rating: @review.Rating</p>
-            <p>@review.Comment</p>
-        </div>
-    }
-}
-else
-{
-    <p>No reviews yet.</p>
-}
-
-@if (User.Identity.IsAuthenticated)
-{
-    <h4>Add a Review</h4>
-    <form asp-action="Create" asp-controller="Reviews" method="post">
-        <input type="hidden" name="productId" value="@Model.Id" />
-        <div class="form-group">
-            <label for="rating">Rating</label>
-            <select id="rating" name="rating" class="form-control" required>
-                @for (int i = 0; i <= 10; i++)
-                {
-                    <option value="@i">@i</option>
-                }
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="comment">Comment</label>
-            <textarea id="comment" name="comment" class="form-control" rows="4"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Review</button>
-    </form>
-}
-else
-{
-    <p><a href="@Url.Action("Login", "Account")">Log in</a> to add a review.</p>
-}
+<div class="row mt-5">
+    <div class="col-md-8">
+        <h2>Reviews</h2>
+        @if (ViewBag.Reviews != null)
+        {
+            foreach (var review in ViewBag.Reviews)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>@review.UserEmail</strong> - @review.Date.ToShortDateString()</h5>
+                        <p class="card-text">Rating: @review.Rating</p>
+                        <p class="card-text">@review.Comment</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="col-md-4">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add Review</h5>
+                    <form asp-action="AddReview" method="post">
+                        <div class="form-group">
+                            <label for="Rating">Rating (0-10)</label>
+                            <input type="number" id="Rating" name="Rating" min="0" max="10" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Comment">Comment</label>
+                            <textarea id="Comment" name="Comment" class="form-control" rows="3" maxlength="1000"></textarea>
+                        </div>
+                        <input type="hidden" name="ProductId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">You need to <a asp-controller="Account" asp-action="Login">log in</a> to submit a review.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
 <div style="margin-bottom: 800px"></div>
 

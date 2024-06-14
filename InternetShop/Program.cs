@@ -1,25 +1,20 @@
 using FirebaseAdmin;
-using Google.Api;
 using Google.Apis.Auth.OAuth2;
 using InternetShop.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Настройка сервисов
 builder.Services.AddControllersWithViews();
 
-// Регистрация ProductService
+// Регистрация сервисов
 builder.Services.AddSingleton<ProductService>();
+builder.Services.AddSingleton<ReviewService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<ReviewService>();
 builder.Services.AddHttpClient();
 
 // Настройка Firebase Admin SDK
@@ -28,9 +23,6 @@ FirebaseApp.Create(new AppOptions()
     Credential = GoogleCredential.FromFile("credentials.json")
 });
 
-// Register ProductService
-builder.Services.AddSingleton(new ProductService());
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -38,15 +30,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Account/Logout";
     });
 
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 
 // Конфигурация middleware
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -57,8 +46,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

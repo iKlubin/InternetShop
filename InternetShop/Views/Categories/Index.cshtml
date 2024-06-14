@@ -1,0 +1,76 @@
+﻿@model IEnumerable<InternetShop.Models.Category>
+
+@{
+    ViewData["Title"] = "Категории";
+}
+
+<h1 class="text-center my-4">Категории</h1>
+
+<div class="container" style="margin-bottom: 500px">
+    <div class="row">
+        @foreach (var category in Model)
+        {
+            <div class="col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card category-card h-100 shadow-sm">
+                    <div class="card-img-container">
+                        <img src="@category.ImageUrl" class="card-img-top" alt="@category.Name">
+                    </div>
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <h5 class="card-title">
+                            <a href="@Url.Action("ByCategory", "Products", new { category = category.Name })">@category.Name</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .category-card {
+        border-radius: 15px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-container {
+        padding: 15px;
+        height: 300px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .card-img-top {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .category-card:hover .card-img-top {
+        transform: scale(1.1);
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .card-title a {
+        text-decoration: none;
+        color: #343a40;
+    }
+
+    .card-title a:hover {
+        color: #007bff;
+    }
+</style>

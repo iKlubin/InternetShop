@@ -86,35 +86,35 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">Корзина</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About Us</a>
+                            <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Категории</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">О нас</a>
                         </li>
                     </ul>
-                    <a href="@Url.Action("Create")" class="btn btn-primary me-2">Add New Product</a>
+                    <a href="@Url.Action("Create")" class="btn btn-primary me-2">Разместить</a>
                     <form class="d-flex" asp-action="Index" method="get">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString" value="@ViewData["SearchString"]">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-link nav-link" style="display:inline;cursor:pointer;">Logout</button>
+                            <button type="submit" class="btn btn-link nav-link" style="display:inline;cursor:pointer;">Выйти</button>
                         </form>
-                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Profile">Profile</a>
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Profile">Профиль</a>
                     }
                     else
                     {
-                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Login">Войти</a>
+                        <a class="btn btn-outline-light ms-2" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
                     }
                 </div>
             </div>
