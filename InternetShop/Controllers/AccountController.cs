@@ -30,7 +30,7 @@ namespace InternetShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(User model)
         {
             if (ModelState.IsValid)
             {

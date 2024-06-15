@@ -10,11 +10,15 @@ builder.Services.AddControllersWithViews();
 
 // Регистрация сервисов
 builder.Services.AddSingleton<ProductService>();
+builder.Services.AddSingleton<CategoryService>();
 builder.Services.AddSingleton<ReviewService>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<ProductService>();
+
 builder.Services.AddHttpClient();
 
 // Настройка Firebase Admin SDK
@@ -29,6 +33,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";
     });
+
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession();
 builder.Services.AddDistributedMemoryCache();
@@ -46,8 +52,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();
-app.UseAuthentication();
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
